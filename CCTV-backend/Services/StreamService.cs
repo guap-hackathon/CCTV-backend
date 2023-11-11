@@ -2,13 +2,21 @@ namespace CCTV_backend.Services;
 
 public class StreamService : IHostedService
 {
-    public async Task StartAsync(CancellationToken cancellationToken)
+    private readonly RtspService _rtspService;
+
+    public StreamService(RtspService rtspService)
     {
-        throw new NotImplementedException();
+        _rtspService = rtspService;
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await _rtspService.Init();
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _rtspService.Stop();
+        return Task.CompletedTask;
     }
 }

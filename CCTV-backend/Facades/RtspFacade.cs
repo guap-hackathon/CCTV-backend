@@ -1,4 +1,5 @@
 using CCTV_backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CCTV_backend.Facades;
 
@@ -11,8 +12,17 @@ public class RtspFacade
         _rtspService = rtspService;
     }
 
-    public async Task GetStreamAsync(string rtspUrl)
+    public async Task<IActionResult> ListenNewUrl(string rtspUrl)
     {
-        await _rtspService.GetStreamAsync(rtspUrl);
+        var success = await _rtspService.StartStreamAsync(rtspUrl);
+        IActionResult result = success ? new OkResult() : new StatusCodeResult(500);
+        return result;
+    }
+
+    public async Task<IActionResult> StopListening(string rtspUrl)
+    {
+        var success = await _rtspService.StopStream(rtspUrl);
+        IActionResult result = success ? new OkResult() : new StatusCodeResult(500);
+        return result;
     }
 }

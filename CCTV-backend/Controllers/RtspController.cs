@@ -1,3 +1,4 @@
+using CCTV_backend.Entity;
 using CCTV_backend.Facades;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +15,17 @@ public class RtspController : ControllerBase
         _rtspFacade = rtspFacade;
     }
 
-    [HttpGet("{rtspUrl}")]
-    public async Task<IActionResult> RtspUrl(
-        [FromRoute]string rtspUrl)
+    [HttpPost]
+    public Task<IActionResult> ListenNewUrl(
+        [FromBody]RtspStreamDto rtspRtspStream)
     {
-        await _rtspFacade.GetStreamAsync(rtspUrl);
-        return Ok();
+        return _rtspFacade.ListenNewUrl(rtspRtspStream.RtspUrl);
+    }
+
+    [HttpDelete]
+    public Task<IActionResult> StopListening(
+        [FromBody]RtspStreamDto rtspRtspStream)
+    {
+        return _rtspFacade.StopListening(rtspRtspStream.RtspUrl);
     }
 }
